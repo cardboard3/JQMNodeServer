@@ -13,6 +13,7 @@ let RecipeObject = function (pTitle, pCooktime, pType, pCalories, pCreator, pDat
 
 }
 
+// RecipeArray.push(new RecipeObject("Food", "Time", "Breakfast", 5, "Creator", 2022));
 // Title - Cooktime - Type - Calories - Creator - Date
 // RecipeArray.push(new RecipeObject("Apple Pie", 60, "Dessert", 1200, "John Cena", 2020));
 // console.log(RecipeArray);
@@ -32,7 +33,6 @@ document.getElementById("buttonAdd").addEventListener("click", function () {
 
 
     //push new note to server
-    // I had an ID, the text that was like "ID++" caused an internal server error. I removed it and it works fine now 
     $.ajax({
         url:"/AddRecipe",
         type:"POST",
@@ -89,6 +89,16 @@ document.getElementById("buttonAdd").addEventListener("click", function () {
     $(document).on("pagebeforeshow", "#details", function (event) {   
         let RecipeID = localStorage.getItem('parm');  // get the unique key back from the storage dictionairy
         document.getElementById("thatRecipeID").innerHTML = RecipeID;
+        let RecipeTitle = localStorage.getItem('recipeTitle');
+        let RecipeCooktime = localStorage.getItem('recipeCooktime');
+        let RecipeCalories = localStorage.getItem('recipeCalories');
+        let RecipeCreator = localStorage.getItem('recipeCreator');
+        let RecipeDate = localStorage.getItem('recipeDate');
+        document.getElementById("thatRecipeTitle").innerHTML = RecipeTitle;
+        document.getElementById("thatRecipeCooktime").innerHTML = RecipeCooktime;
+        document.getElementById("thatRecipeCalories").innerHTML = RecipeCalories;
+        document.getElementById("thatRecipeCreator").innerHTML = RecipeCreator;
+        document.getElementById("thatRecipeDate").innerHTML = RecipeDate;
     });
 
 
@@ -121,6 +131,12 @@ function createList() {
             myLi.innerHTML =  element.ID + ":  " + element.Title + ",  " + element.Type;
 
             myLi.setAttribute("data-parm", element.ID);
+            myLi.setAttribute("data-title", element.Title);
+            myLi.setAttribute("data-cooktime", element.Cooktime);
+            myLi.setAttribute("data-calories", element.Calories);
+            myLi.setAttribute("data-creator", element.Creator);
+            myLi.setAttribute("data-date", element.Date);
+
 
             theList.appendChild(myLi);
     });
@@ -131,8 +147,21 @@ function createList() {
     newRecipeArray.forEach(function (element,i) {     
         element.addEventListener('click', function () {     
             
+            // I did it a primitive way which does not use the array. If I had more values I would do a more complex setup.
+
             var parm = this.getAttribute("data-parm"); 
             localStorage.setItem('parm', parm);
+            let recipeTitle = this.getAttribute("data-title") ;
+            localStorage.setItem('recipeTitle', recipeTitle);
+            let recipeCooktime = this.getAttribute("data-cooktime") ;
+            localStorage.setItem('recipeCooktime', recipeCooktime);
+            let recipeCalories = this.getAttribute("data-calories") ;
+            localStorage.setItem('recipeCalories', recipeCalories);
+            let recipeCreator = this.getAttribute("data-creator") ;
+            localStorage.setItem('recipeCreator', recipeCreator);
+            let recipeDate = this.getAttribute("data-date") ;
+            localStorage.setItem('recipeDate', recipeDate);
+        
             document.location.href = "index.html#details";
         });
     });
@@ -142,7 +171,7 @@ function createList() {
 };
 
 function dynamicSort(property) {
-  
+
  
     return function (a, b) {
             return a[property].localeCompare(b[property]);
